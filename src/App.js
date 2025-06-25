@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LOCAL_KEY = "notes";
 
@@ -11,7 +12,11 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen flex flex-col items-center justify-center bg-gray-100"
+    >
       <div className="bg-white p-6 rounded shadow w-80">
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         <input
@@ -35,7 +40,7 @@ function Login({ onLogin }) {
           Login
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -67,9 +72,21 @@ export default function NoteApp() {
   if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />;
 
   return (
-    <div className="min-h-screen p-4 bg-yellow-100">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen p-4 bg-yellow-100"
+    >
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow">
-        <h1 className="text-3xl font-bold mb-4 text-center">📝 Note Taking App</h1>
+        <motion.h1
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold mb-4 text-center"
+        >
+          📝 Note Taking App
+        </motion.h1>
+
         <div className="flex gap-2 mb-4">
           <input
             value={input}
@@ -84,23 +101,39 @@ export default function NoteApp() {
             Add
           </button>
         </div>
+
         <ul>
-          {notes.map((note) => (
-            <li
-              key={note.id}
-              className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded"
-            >
-              <span>{note.text}</span>
-              <button
-                onClick={() => deleteNote(note.id)}
-                className="text-red-500 hover:underline"
+          <AnimatePresence>
+            {notes.map((note) => (
+              <motion.li
+                key={note.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.3 }}
+                className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded"
               >
-                Delete
-              </button>
-            </li>
-          ))}
+                <span>{note.text}</span>
+                <button
+                  onClick={() => deleteNote(note.id)}
+                  className="text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
+              </motion.li>
+            ))}
+          </AnimatePresence>
         </ul>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="text-center mt-6 text-sm text-gray-500"
+        >
+          Made with ❤️ by Oshiv Bansal
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
